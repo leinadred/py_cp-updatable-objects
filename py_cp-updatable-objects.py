@@ -1,9 +1,8 @@
 # 2023-01 - DME
-# Script to fetch available Updatable Objects from Check Point Management and putting them into a csv file.
+# Script to fetch available Updatable Objects from Check Point Management and putting them into a csv file (
 ############################################################################################
 from cpapi import APIClient, APIClientArgs
 import argparse
-import logging
 import csv
 ############################################################################################
 # set args 
@@ -12,21 +11,20 @@ parser.add_argument('-H', '--api_server', help='Target Host (CP Management Serve
 parser.add_argument('-U', '--api_user', help='API User', required=False)
 parser.add_argument('-P', '--api_pwd', help='API Users Password // OR API Key (then do not use -U)', required=True)
 parser.add_argument('-C', '--api_context', help='If SmartCloud-1 is used, enter context information here (i.e. bhkjnkm-knjhbas-d32424b/web_api) - for On Prem enter \"-C none\"')
-parser.add_argument('-v', '--verbose', help='Run Script with logging output - Troubleshooting and so', action='store_true')
 
 subparser = parser.add_subparsers(required=True, dest='cmd', help='Tell what to do (show || set)')
 
 # actions
 parser_show = subparser.add_parser('show')
 parser_show.add_argument('repositories', type=str, default=None, help='show providers of updatable objects')
-parser_show.add_argument('filter', type=str, default='all', help='show providers of updatable objects')
+parser_show.add_argument('-f', '--filter', type=str, default='all', help='show providers of updatable objects')
 
+#args = vars(parser.parse_args())
 args = parser.parse_args()
 try:
     args.api_context
 except:
     args.api_context = None
-
 
 ############################################################################################################################################
 
@@ -49,7 +47,6 @@ def fun_getfromapi():
             login_res = client.login(args.api_user, args.api_pwd)
         else:
             raise SystemExit("check input of User / Password or Key (-U/-P) - see help")
-        logging.debug('API Login done: '+str(login_res))
         # when login failed
         list_repos=[]
         if not login_res.success:
@@ -64,7 +61,6 @@ def fun_getfromapi():
                 while not res_repo['to'] == res_repo['total']:
                     res_repo = client.api_call("show-updatable-objects-repository-content",{"limit":500,"offset":res_repo['to']}).data
                     list_repos.append(res_repo['objects'])
-                #print(res_repo)
             else:
                 # Call Repos containing given string"
                 res_repo=client.api_call("show-updatable-objects-repository-content",{"limit":500,"filter":{"text":str(args.filter)}}).data
@@ -75,8 +71,6 @@ def fun_getfromapi():
             csvdata=[]
             for s in list_repos:
                 for e in s:
-                    #list.append(e)
-                    csvfields=['Name', 'uid in Repo', 'Description', 'info url', 'URI']
                     try:
                         e['name-in-updatable-objects-repository']
                     except:
@@ -105,6 +99,7 @@ def fun_getfromapi():
                     csvdata.append(list)
             with open('result.csv','w') as csvres:
                 csvwriter = csv.writer(csvres)
+                csvfields=['Name', 'uid in Repo', 'Description', 'info url', 'URI']
                 csvwriter.writerow(csvfields)
                 csvwriter.writerows(list)
 ############################################################################################################################################
