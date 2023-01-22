@@ -6,7 +6,8 @@ Modules used:
  - argparse (should be there by default)
  - csv (should be there by default)
 
-usage - 
+#usage
+
 python py_cp-updatable-objects.py -H <Check Point Management Server> (-U/--user <api user name>) -P/--password <if API key, use only "-P", else password for "--user"> show repositories (-f Azure)
   
   
