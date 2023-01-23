@@ -1,3 +1,5 @@
+![license](https://img.shields.io/github/license/leinadred/py_cp-updatable-objects)
+![language](https://img.shields.io/github/languages/top/leinadred/py_cp-updatable-objects)
 # py_cp-updatable-objects
 Script to fetch available Updatable Objects from Check Point Management and putting them into a csv file.
 
