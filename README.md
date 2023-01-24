@@ -8,8 +8,22 @@ Modules used:
  - argparse (should be there by default)
  - csv (should be there by default)
 
-# usage
+possible use cases:
 
-python py_cp-updatable-objects.py -H <Check Point Management Server> (-U/--user <api user name>) -P/--password <if API key, use only "-P", else password for "--user"> show repositories (-f Azure)
+ - providing this to rule change requester to request the correct source / destinations
+ - just having an eye of what is possible to import
+ - (coming later) - having an eye of what is imported
+ - (coming later) - having an eye of last update occured to specific objects
+
+
+# usage
   
-  
+python py_cp-updatable-objects.py -H <Host IP/Name> (-U/--user <user>) -P/--password <auth credential> (if API key, use only "-P", else password for "--user") show repositories (-f <string to filter for, i.e. "Azure">)
+
+example:
+
+python py_cp-updatable-objects.py -H 1.2.3.4  -P s3cr3tk3Y show repositories -f Azure
+
+
+
+
